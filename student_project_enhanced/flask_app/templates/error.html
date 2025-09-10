@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Error - Student Risk Predictor{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="card" style="text-align: center; padding: 3rem;">
+        <div style="font-size: 4rem; margin-bottom: 1rem;">⚠️</div>
+        <h2>Oops! Something went wrong</h2>
+        <p style="font-size: 1.2rem; color: var(--text-secondary); margin: 1rem 0 2rem 0;">
+            {{ error or "An unexpected error occurred" }}
+        </p>
+        
+        <div class="alert alert-error" style="margin: 2rem 0;">
+            <strong>What can you do?</strong>
+            <ul style="text-align: left; margin-top: 1rem;">
+                <li>Check that you've filled in all required fields correctly</li>
+                <li>Try refreshing the page and submitting again</li>
+                <li>Go back to the home page and start over</li>
+                <li>Contact your administrator if the problem persists</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Go to Home Page</a>
+            <button onclick="history.back()" class="btn btn-secondary">Go Back</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

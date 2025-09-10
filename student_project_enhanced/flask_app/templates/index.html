@@ -1,0 +1,547 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card fade-in">
+    <div class="card-header">
+        <h2>🎓 Student Academic Risk Assessment</h2>
+        <p>Enter student information to predict academic performance risk level. Fill out the form below to get an AI-powered assessment.</p>
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">Progress: 0%</div>
+    </div>
+
+    <form method="POST" action="{{ url_for('predict') }}" id="predictForm">
+        <!-- Section 1: Personal Information -->
+        <div class="form-section">
+            <h3 class="section-title">👤 Personal Information</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="school">School <span class="required">*</span></label>
+                    <select name="school" id="school" class="form-control" required>
+                        <option value="">Choose your school...</option>
+                        <option value="GP">Gabriel Pereira</option>
+                        <option value="MS">Mousinho da Silveira</option>
+                    </select>
+                    <small class="form-help">Select the school you attend</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="sex">Gender <span class="required">*</span></label>
+                    <select name="sex" id="sex" class="form-control" required>
+                        <option value="">Select gender...</option>
+                        <option value="F">Female</option>
+                        <option value="M">Male</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age <span class="required">*</span></label>
+                    <input type="number" name="age" id="age" class="form-control" min="15" max="25" placeholder="e.g., 17" required>
+                    <small class="form-help">Age between 15-25 years</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address Type <span class="required">*</span></label>
+                    <select name="address" id="address" class="form-control" required>
+                        <option value="">Select location...</option>
+                        <option value="U">🏙️ Urban</option>
+                        <option value="R">🌾 Rural</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Family Background -->
+        <div class="form-section">
+            <h3 class="section-title">👨‍👩‍👧‍👦 Family Background</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="famsize">Family Size <span class="required">*</span></label>
+                    <select name="famsize" id="famsize" class="form-control" required>
+                        <option value="">Select family size...</option>
+                        <option value="LE3">≤ 3 members</option>
+                        <option value="GT3">> 3 members</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Pstatus">Parent Status <span class="required">*</span></label>
+                    <select name="Pstatus" id="Pstatus" class="form-control" required>
+                        <option value="">Select status...</option>
+                        <option value="T">👫 Living together</option>
+                        <option value="A">💔 Apart</option>
+                    </select>
+                    <small class="form-help">Current cohabitation status of parents</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="Medu">Mother's Education <span class="required">*</span></label>
+                    <select name="Medu" id="Medu" class="form-control" required>
+                        <option value="">Select level...</option>
+                        <option value="0">None</option>
+                        <option value="1">Primary (4th grade)</option>
+                        <option value="2">5th to 9th grade</option>
+                        <option value="3">Secondary education</option>
+                        <option value="4">Higher education</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Fedu">Father's Education <span class="required">*</span></label>
+                    <select name="Fedu" id="Fedu" class="form-control" required>
+                        <option value="">Select level...</option>
+                        <option value="0">None</option>
+                        <option value="1">Primary (4th grade)</option>
+                        <option value="2">5th to 9th grade</option>
+                        <option value="3">Secondary education</option>
+                        <option value="4">Higher education</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Mjob">Mother's Job</label>
+                    <select name="Mjob" id="Mjob" class="form-control">
+                        <option value="">Select job...</option>
+                        <option value="teacher">👩‍🏫 Teacher</option>
+                        <option value="health">🏥 Healthcare</option>
+                        <option value="services">🏢 Services</option>
+                        <option value="at_home">🏠 At home</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="Fjob">Father's Job</label>
+                    <select name="Fjob" id="Fjob" class="form-control">
+                        <option value="">Select job...</option>
+                        <option value="teacher">👨‍🏫 Teacher</option>
+                        <option value="health">🏥 Healthcare</option>
+                        <option value="services">🏢 Services</option>
+                        <option value="at_home">🏠 At home</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Academic Information -->
+        <div class="form-section">
+            <h3 class="section-title">📚 Academic Information</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="reason">Reason for School Choice</label>
+                    <select name="reason" id="reason" class="form-control">
+                        <option value="">Select reason...</option>
+                        <option value="home">🏠 Close to home</option>
+                        <option value="reputation">⭐ School reputation</option>
+                        <option value="course">📖 Course preference</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="guardian">Guardian <span class="required">*</span></label>
+                    <select name="guardian" id="guardian" class="form-control" required>
+                        <option value="">Select guardian...</option>
+                        <option value="mother">👩 Mother</option>
+                        <option value="father">👨 Father</option>
+                        <option value="other">👥 Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="traveltime">Travel Time to School <span class="required">*</span></label>
+                    <select name="traveltime" id="traveltime" class="form-control" required>
+                        <option value="">Select time...</option>
+                        <option value="1">⚡ < 15 min</option>
+                        <option value="2">🚶 15-30 min</option>
+                        <option value="3">🚌 30min-1hr</option>
+                        <option value="4">🚗 > 1 hour</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="studytime">Weekly Study Time <span class="required">*</span></label>
+                    <select name="studytime" id="studytime" class="form-control" required>
+                        <option value="">Select time...</option>
+                        <option value="1">📱 < 2 hours</option>
+                        <option value="2">📖 2-5 hours</option>
+                        <option value="3">📚 5-10 hours</option>
+                        <option value="4">🔥 > 10 hours</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="failures">Past Failures <span class="required">*</span></label>
+                    <select name="failures" id="failures" class="form-control" required>
+                        <option value="">Select failures...</option>
+                        <option value="0">✅ None</option>
+                        <option value="1">⚠️ 1</option>
+                        <option value="2">🔶 2</option>
+                        <option value="3">🔴 3 or more</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="G1">First Period Grade (0-20)</label>
+                    <input type="number" name="G1" id="G1" class="form-control" min="0" max="20" placeholder="e.g., 15">
+                    <small class="form-help">Leave empty if not available</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="G2">Second Period Grade (0-20)</label>
+                    <input type="number" name="G2" id="G2" class="form-control" min="0" max="20" placeholder="e.g., 16">
+                    <small class="form-help">Leave empty if not available</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Support & Activities -->
+        <div class="form-section">
+            <h3 class="section-title">🎯 Support & Activities</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="schoolsup">School Educational Support <span class="required">*</span></label>
+                    <select name="schoolsup" id="schoolsup" class="form-control" required>
+                        <option value="">Select option...</option>
+                        <option value="yes">✅ Yes</option>
+                        <option value="no">❌ No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="famsup">Family Educational Support <span class="required">*</span></label>
+                    <select name="famsup" id="famsup" class="form-control" required>
+                        <option value="">Select option...</option>
+                        <option value="yes">✅ Yes</option>
+                        <option value="no">❌ No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="paid">Extra Paid Classes <span class="required">*</span></label>
+                    <select name="paid" id="paid" class="form-control" required>
+                        <option value="">Select option...</option>
+                        <option value="yes">💰 Yes</option>
+                        <option value="no">🆓 No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="activities">Extra-curricular Activities <span class="required">*</span></label>
+                    <select name="activities" id="activities" class="form-control" required>
+                        <option value="">Select option...</option>
+                        <option value="yes">🎨 Yes</option>
+                        <option value="no">❌ No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="nursery">Attended Nursery <span class="required">*</span></label>
+                    <select name="nursery" id="nursery" class="form-control" required>
+                        <option value="">Select option...</option>
+                        <option value="yes">🧸 Yes</option>
+                        <option value="no">❌ No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="higher">Wants Higher Education <span class="required">*</span></label>
+                    <select name="higher" id="higher" class="form-control" required>
+                        <option value="">Select option...</option>
+                        <option value="yes">🎓 Yes</option>
+                        <option value="no">❌ No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="internet">Internet at Home <span class="required">*</span></label>
+                    <select name="internet" id="internet" class="form-control" required>
+                        <option value="">Select option...</option>
+                        <option value="yes">🌐 Yes</option>
+                        <option value="no">❌ No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="romantic">In Romantic Relationship <span class="required">*</span></label>
+                    <select name="romantic" id="romantic" class="form-control" required>
+                        <option value="">Select option...</option>
+                        <option value="yes">💕 Yes</option>
+                        <option value="no">❌ No</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Personal Metrics -->
+        <div class="form-section">
+            <h3 class="section-title">📊 Personal & Health Metrics</h3>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="famrel">Family Relationship Quality (1-5) <span class="required">*</span></label>
+                    <div class="rating-input">
+                        <input type="range" name="famrel" id="famrel" class="form-range" min="1" max="5" value="3" required>
+                        <div class="rating-labels">
+                            <span>Very Bad</span>
+                            <span id="famrel-value">3</span>
+                            <span>Excellent</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="freetime">Free Time (1-5) <span class="required">*</span></label>
+                    <div class="rating-input">
+                        <input type="range" name="freetime" id="freetime" class="form-range" min="1" max="5" value="3" required>
+                        <div class="rating-labels">
+                            <span>Very Low</span>
+                            <span id="freetime-value">3</span>
+                            <span>Very High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="goout">Going Out Frequency (1-5) <span class="required">*</span></label>
+                    <div class="rating-input">
+                        <input type="range" name="goout" id="goout" class="form-range" min="1" max="5" value="3" required>
+                        <div class="rating-labels">
+                            <span>Very Low</span>
+                            <span id="goout-value">3</span>
+                            <span>Very High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Dalc">Workday Alcohol (1-5) <span class="required">*</span></label>
+                    <div class="rating-input">
+                        <input type="range" name="Dalc" id="Dalc" class="form-range" min="1" max="5" value="1" required>
+                        <div class="rating-labels">
+                            <span>Very Low</span>
+                            <span id="Dalc-value">1</span>
+                            <span>Very High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="Walc">Weekend Alcohol (1-5) <span class="required">*</span></label>
+                    <div class="rating-input">
+                        <input type="range" name="Walc" id="Walc" class="form-range" min="1" max="5" value="1" required>
+                        <div class="rating-labels">
+                            <span>Very Low</span>
+                            <span id="Walc-value">1</span>
+                            <span>Very High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="health">Health Status (1-5) <span class="required">*</span></label>
+                    <div class="rating-input">
+                        <input type="range" name="health" id="health" class="form-range" min="1" max="5" value="4" required>
+                        <div class="rating-labels">
+                            <span>Very Bad</span>
+                            <span id="health-value">4</span>
+                            <span>Very Good</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="absences">School Absences <span class="required">*</span></label>
+                    <input type="number" name="absences" id="absences" class="form-control" min="0" max="93" placeholder="e.g., 5" value="0" required>
+                    <small class="form-help">Total number of absences (0-93)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="clearForm">
+                🔄 Clear Form
+            </button>
+            <button type="button" class="btn btn-accent" id="fillSample">
+                📋 Sample Data
+            </button>
+            <button type="submit" class="btn btn-primary">
+                🎯 Predict Risk Level
+            </button>
+        </div>
+    </form>
+
+    <!-- Loading State -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>🤖 AI is analyzing the student data...</p>
+    </div>
+</div>
+
+<!-- Quick Stats Card -->
+{% if model_info %}
+<div class="card mt-3">
+    <div class="card-header">
+        <h3>📈 Model Performance</h3>
+        <p>Information about our AI prediction model</p>
+    </div>
+    <div class="model-stats">
+        {% if model_info.model_name %}
+        <div class="stat-card">
+            <div class="stat-value">🧠 {{ model_info.model_name }}</div>
+            <div class="stat-label">AI Model</div>
+        </div>
+        {% endif %}
+        
+        {% if model_info.performance and model_info.performance.accuracy %}
+        <div class="stat-card">
+            <div class="stat-value">{{ "%.1f"|format(model_info.performance.accuracy * 100) }}%</div>
+            <div class="stat-label">Accuracy</div>
+        </div>
+        {% endif %}
+        
+        {% if feature_info %}
+        <div class="stat-card">
+            <div class="stat-value">{{ (feature_info.numeric_features|length + feature_info.categorical_features|length) if feature_info.numeric_features else "20+" }}</div>
+            <div class="stat-label">Data Points</div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Progress tracking
+    const form = document.getElementById('predictForm');
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const requiredFields = form.querySelectorAll('[required]');
+    
+    function updateProgress() {
+        const filled = Array.from(requiredFields).filter(field => field.value.trim() !== '').length;
+        const percentage = Math.round((filled / requiredFields.length) * 100);
+        progressFill.style.width = percentage + '%';
+        progressText.textContent = `Progress: ${percentage}% (${filled}/${requiredFields.length} required fields)`;
+        
+        if (percentage === 100) {
+            progressFill.style.background = 'var(--gradient-accent)';
+            progressText.innerHTML = '🎉 All required fields completed!';
+        }
+    }
+    
+    // Update progress on input
+    requiredFields.forEach(field => {
+        field.addEventListener('input', updateProgress);
+        field.addEventListener('change', updateProgress);
+    });
+    
+    // Range input handlers
+    const ranges = ['famrel', 'freetime', 'goout', 'Dalc', 'Walc', 'health'];
+    ranges.forEach(range => {
+        const input = document.getElementById(range);
+        const display = document.getElementById(range + '-value');
+        if (input && display) {
+            input.addEventListener('input', function() {
+                display.textContent = this.value;
+                updateProgress();
+            });
+        }
+    });
+    
+    // Sample data button
+    document.getElementById('fillSample').addEventListener('click', function() {
+        // Fill with sample data
+        document.getElementById('school').value = 'GP';
+        document.getElementById('sex').value = 'F';
+        document.getElementById('age').value = '17';
+        document.getElementById('address').value = 'U';
+        document.getElementById('famsize').value = 'GT3';
+        document.getElementById('Pstatus').value = 'T';
+        document.getElementById('Medu').value = '3';
+        document.getElementById('Fedu').value = '2';
+        document.getElementById('Mjob').value = 'services';
+        document.getElementById('Fjob').value = 'other';
+        document.getElementById('reason').value = 'reputation';
+        document.getElementById('guardian').value = 'mother';
+        document.getElementById('traveltime').value = '2';
+        document.getElementById('studytime').value = '2';
+        document.getElementById('failures').value = '0';
+        document.getElementById('schoolsup').value = 'yes';
+        document.getElementById('famsup').value = 'yes';
+        document.getElementById('paid').value = 'no';
+        document.getElementById('activities').value = 'yes';
+        document.getElementById('nursery').value = 'yes';
+        document.getElementById('higher').value = 'yes';
+        document.getElementById('internet').value = 'yes';
+        document.getElementById('romantic').value = 'no';
+        document.getElementById('famrel').value = '4';
+        document.getElementById('freetime').value = '3';
+        document.getElementById('goout').value = '2';
+        document.getElementById('Dalc').value = '1';
+        document.getElementById('Walc').value = '2';
+        document.getElementById('health').value = '4';
+        document.getElementById('absences').value = '2';
+        document.getElementById('G1').value = '15';
+        document.getElementById('G2').value = '16';
+        
+        // Update range displays
+        ranges.forEach(range => {
+            const input = document.getElementById(range);
+            const display = document.getElementById(range + '-value');
+            if (input && display) {
+                display.textContent = input.value;
+            }
+        });
+        
+        updateProgress();
+        
+        // Show success message
+        const button = this;
+        const originalText = button.innerHTML;
+        button.innerHTML = '✅ Sample Data Loaded!';
+        button.disabled = true;
+        setTimeout(() => {
+            button.innerHTML = originalText;
+            button.disabled = false;
+        }, 2000);
+    });
+    
+    // Clear form button
+    document.getElementById('clearForm').addEventListener('click', function() {
+        if (confirm('Are you sure you want to clear all form data?')) {
+            form.reset();
+            // Reset range displays
+            ranges.forEach(range => {
+                const input = document.getElementById(range);
+                const display = document.getElementById(range + '-value');
+                if (input && display) {
+                    input.value = range === 'health' ? '4' : (range === 'famrel' ? '3' : (range.includes('alc') ? '1' : '3'));
+                    display.textContent = input.value;
+                }
+            });
+            updateProgress();
+        }
+    });
+    
+    // Initial progress update
+    updateProgress();
+    
+    // Smooth scrolling for form sections
+    const sections = document.querySelectorAll('.form-section');
+    sections.forEach((section, index) => {
+        if (index > 0) {
+            section.style.marginTop = '3rem';
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block title %}Model Information - Student Risk Predictor{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="card">
+        <div class="card-header">
+            <h2>Model Information</h2>
+            <p>Technical details about the AI model used for predictions</p>
+        </div>
+
+        {% if model_metadata %}
+        <!-- Model Overview -->
+        <div class="model-stats">
+            <div class="stat-card">
+                <div class="stat-value">{{ model_metadata.model_name or "N/A" }}</div>
+                <div class="stat-label">Model Type</div>
+            </div>
+            
+            {% if model_metadata.performance %}
+            <div class="stat-card">
+                <div class="stat-value">{{ "%.1f"|format((model_metadata.performance.accuracy or 0) * 100) }}%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            
+            {% if model_metadata.performance.precision %}
+            <div class="stat-card">
+                <div class="stat-value">{{ "%.1f"|format((model_metadata.performance.precision or 0) * 100) }}%</div>
+                <div class="stat-label">Precision</div>
+            </div>
+            {% endif %}
+            
+            {% if model_metadata.performance.recall %}
+            <div class="stat-card">
+                <div class="stat-value">{{ "%.1f"|format((model_metadata.performance.recall or 0) * 100) }}%</div>
+                <div class="stat-label">Recall</div>
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+
+        <!-- Model Details -->
+        <div style="margin-top: 2rem;">
+            <h3>Model Description</h3>
+            <p>
+                This machine learning model has been trained to predict academic risk levels for students based on various 
+                personal, social, and academic factors. The model analyzes patterns in student data to identify those who 
+                may be at risk of poor academic performance.
+            </p>
+            
+            {% if model_metadata.training_date %}
+            <p><strong>Training Date:</strong> {{ model_metadata.training_date }}</p>
+            {% endif %}
+            
+            {% if model_metadata.data_size %}
+            <p><strong>Training Data Size:</strong> {{ model_metadata.data_size }} students</p>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        {% if feature_info %}
+        <!-- Features Information -->
+        <div style="margin-top: 2rem;">
+            <h3>Model Features</h3>
+            <p>The model uses the following types of features to make predictions:</p>
+            
+            <div class="form-grid" style="margin-top: 1rem;">
+                <div class="card" style="padding: 1rem;">
+                    <h4>Personal Information</h4>
+                    <p>School, gender, age, address type, family structure</p>
+                </div>
+                
+                <div class="card" style="padding: 1rem;">
+                    <h4>Academic Factors</h4>
+                    <p>Study time, failures, absences, travel time, support systems</p>
+                </div>
+                
+                <div class="card" style="padding: 1rem;">
+                    <h4>Social & Lifestyle</h4>
+                    <p>Family relationships, free time, social activities, health status</p>
+                </div>
+                
+                <div class="card" style="padding: 1rem;">
+                    <h4>Educational Background</h4>
+                    <p>Parent education levels, previous schooling, academic aspirations</p>
+                </div>
+            </div>
+
+            {% if feature_info.numeric_features %}
+            <div style="margin-top: 2rem;">
+                <h4>Numeric Features:</h4>
+                <ul style="columns: 2; column-gap: 2rem;">
+                    {% for feature in feature_info.numeric_features %}
+                    <li>{{ feature.replace('_', ' ').title() }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            {% if feature_info.categorical_features %}
+            <div style="margin-top: 2rem;">
+                <h4>Categorical Features:</h4>
+                <ul style="columns: 2; column-gap: 2rem;">
+                    {% for feature in feature_info.categorical_features %}
+                    <li>{{ feature.replace('_', ' ').title() }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <!-- Performance Metrics -->
+        {% if model_metadata and model_metadata.performance %}
+        <div style="margin-top: 2rem;">
+            <h3>Performance Metrics</h3>
+            <p>The model has been evaluated using standard machine learning metrics:</p>
+            
+            <div class="alert alert-success">
+                <strong>Model Validation:</strong> The model has been tested on unseen data to ensure reliable predictions.
+                {% if model_metadata.performance.accuracy %}
+                With an accuracy of {{ "%.1f"|format(model_metadata.performance.accuracy * 100) }}%, 
+                the model correctly predicts risk levels in most cases.
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Usage Guidelines -->
+        <div style="margin-top: 2rem;">
+            <h3>Usage Guidelines</h3>
+            <div class="alert alert-warning">
+                <strong>Important Note:</strong> This tool is designed to assist educators and administrators in identifying 
+                students who may benefit from additional support. Predictions should be used as one factor among many in 
+                educational decision-making.
+            </div>
+            
+            <ul>
+                <li><strong>Predictive Tool:</strong> Results indicate likelihood, not certainty</li>
+                <li><strong>Support Decisions:</strong> Use predictions to guide intervention strategies</li>
+                <li><strong>Regular Updates:</strong> Student circumstances change; reassess regularly</li>
+                <li><strong>Holistic Approach:</strong> Consider other factors beyond model predictions</li>
+                <li><strong>Privacy:</strong> Handle student data with appropriate confidentiality</li>
+            </ul>
+        </div>
+
+        <!-- Data Sources -->
+        <div style="margin-top: 2rem;">
+            <h3>Data Source</h3>
+            <p>
+                This model was trained using the Student Performance dataset, which contains information about 
+                secondary school students from two Portuguese schools. The dataset includes demographic, social, 
+                and academic information that influences student academic performance.
+            </p>
+            
+            <p>
+                <strong>Dataset Features:</strong> The dataset includes variables such as student grades, 
+                demographic information, social and school-related features, collected through school reports 
+                and questionnaires.
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Make a Prediction</a>
+            <a href="{{ url_for('about') }}" class="btn btn-secondary">Learn More</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}About - Student Risk Predictor{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <div class="card">
+        <div class="card-header">
+            <h2>About Student Risk Predictor</h2>
+            <p>Understanding our AI-powered academic risk assessment system</p>
+        </div>
+
+        <!-- Project Overview -->
+        <div style="margin-bottom: 2rem;">
+            <h3>Project Overview</h3>
+            <p>
+                The Student Risk Predictor is an advanced machine learning application designed to help educational 
+                institutions identify students who may be at risk of poor academic performance. By analyzing various 
+                personal, social, and academic factors, our system provides early warning signals that enable 
+                educators to provide targeted support and interventions.
+            </p>
+        </div>
+
+        <!-- Key Features -->
+        <div style="margin-bottom: 2rem;">
+            <h3>Key Features</h3>
+            <div class="form-grid">
+                <div class="card" style="padding: 1.5rem;">
+                    <h4>🎯 Predictive Analytics</h4>
+                    <p>Uses machine learning to predict academic risk levels with high accuracy</p>
+                </div>
+                
+                <div class="card" style="padding: 1.5rem;">
+                    <h4>📊 Comprehensive Assessment</h4>
+                    <p>Analyzes multiple factors including demographics, family background, and study habits</p>
+                </div>
+                
+                <div class="card" style="padding: 1.5rem;">
+                    <h4>🚀 Real-time Predictions</h4>
+                    <p>Provides instant risk assessments with confidence scores and detailed breakdowns</p>
+                </div>
+                
+                <div class="card" style="padding: 1.5rem;">
+                    <h4>📈 Actionable Insights</h4>
+                    <p>Offers specific recommendations based on predicted risk levels</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div style="margin-bottom: 2rem;">
+            <h3>How It Works</h3>
+            <div class="alert alert-success">
+                <strong>4-Step Process:</strong>
+            </div>
+            <ol style="padding-left: 2rem;">
+                <li><strong>Data Input:</strong> Users enter student information through our comprehensive form</li>
+                <li><strong>Feature Processing:</strong> The system processes and normalizes the input data</li>
+                <li><strong>ML Prediction:</strong> Our trained model analyzes the data and generates risk predictions</li>
+                <li><strong>Results & Recommendations:</strong> Users receive detailed results with actionable recommendations</li>
+            </ol>
+        </div>
+
+        <!-- Risk Categories -->
+        <div style="margin-bottom: 2rem;">
+            <h3>Risk Categories</h3>
+            <p>Our model classifies students into different risk levels:</p>
+            
+            <div class="probability-bars">
+                <div class="probability-item">
+                    <div class="probability-label">
+                        <span><strong>Low Risk</strong></span>
+                        <span>Student likely to perform well</span>
+                    </div>
+                    <div class="probability-bar">
+                        <div class="probability-fill low-risk" style="width: 100%"></div>
+                    </div>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+                        Students in this category typically maintain good academic performance and require standard support.
+                    </p>
+                </div>
+                
+                <div class="probability-item">
+                    <div class="probability-label">
+                        <span><strong>Medium Risk</strong></span>
+                        <span>Student may need additional support</span>
+                    </div>
+                    <div class="probability-bar">
+                        <div class="probability-fill medium-risk" style="width: 100%"></div>
+                    </div>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+                        These students show some risk factors and would benefit from targeted interventions and monitoring.
+                    </p>
+                </div>
+                
+                <div class="probability-item">
+                    <div class="probability-label">
+                        <span><strong>High Risk</strong></span>
+                        <span>Student needs immediate attention</span>
+                    </div>
+                    <div class="probability-bar">
+                        <div class="probability-fill high-risk" style="width: 100%"></div>
+                    </div>
+                    <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">
+                        Students requiring immediate and comprehensive academic support to improve outcomes.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Stack -->
+        <div style="margin-bottom: 2rem;">
+            <h3>Technology Stack</h3>
+            <div class="form-grid">
+                <div class="stat-card">
+                    <div class="stat-value">🐍</div>
+                    <div class="stat-label">Python & Flask</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">🤖</div>
+                    <div class="stat-label">Scikit-learn</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">📊</div>
+                    <div class="stat-label">Pandas & NumPy</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">🎨</div>
+                    <div class="stat-label">HTML/CSS/JS</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits for Educators -->
+        <div style="margin-bottom: 2rem;">
+            <h3>Benefits for Educators</h3>
+            <ul>
+                <li><strong>Early Intervention:</strong> Identify at-risk students before problems escalate</li>
+                <li><strong>Data-Driven Decisions:</strong> Make informed decisions based on comprehensive analysis</li>
+                <li><strong>Resource Allocation:</strong> Efficiently allocate support resources where needed most</li>
+                <li><strong>Personalized Support:</strong> Tailor interventions to individual student needs</li>
+                <li><strong>Progress Tracking:</strong> Monitor effectiveness of intervention strategies</li>
+                <li><strong>Improved Outcomes:</strong> Help more students achieve academic success</li>
+            </ul>
+        </div>
+
+        <!-- Ethical Considerations -->
+        <div style="margin-bottom: 2rem;">
+            <h3>Ethical Considerations</h3>
+            <div class="alert alert-warning">
+                <strong>Responsible AI:</strong> We are committed to ethical and responsible use of AI in education.
+            </div>
+            <ul>
+                <li><strong>Privacy Protection:</strong> Student data is handled with strict confidentiality</li>
+                <li><strong>Bias Mitigation:</strong> We work to minimize algorithmic bias and ensure fairness</li>
+                <li><strong>Human Oversight:</strong> Predictions should supplement, not replace, human judgment</li>
+                <li><strong>Transparency:</strong> We provide clear explanations of how predictions are made</li>
+                <li><strong>Consent:</strong> Appropriate permissions should be obtained for data use</li>
+            </ul>
+        </div>
+
+        <!-- Future Enhancements -->
+        <div style="margin-bottom: 2rem;">
+            <h3>Future Enhancements</h3>
+            <p>We continuously work to improve the system with planned enhancements:</p>
+            <ul>
+                <li>Real-time data integration with student information systems</li>
+                <li>Advanced visualization dashboards for administrators</li>
+                <li>Mobile application for on-the-go access</li>
+                <li>Integration with learning management systems</li>
+                <li>Multi-language support for diverse educational environments</li>
+                <li>Advanced reporting and analytics features</li>
+            </ul>
+        </div>
+
+        <!-- Contact Information -->
+        <div style="margin-bottom: 2rem;">
+            <h3>Support & Contact</h3>
+            <p>
+                For questions about the Student Risk Predictor system, technical support, or feedback, 
+                please contact your system administrator or the development team.
+            </p>
+            
+            <div class="alert alert-success">
+                <strong>Need Help?</strong> Check the Model Information page for technical details or 
+                consult your institution's IT support team for assistance.
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary">Try the Predictor</a>
+            <a href="{{ url_for('model_info') }}" class="btn btn-secondary">Technical Details</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

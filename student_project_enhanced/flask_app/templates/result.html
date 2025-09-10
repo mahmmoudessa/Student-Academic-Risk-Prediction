@@ -1,0 +1,441 @@
+{% extends "base.html" %}
+
+{% block title %}🎯 Prediction Result - Student Risk Predictor{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <!-- Prediction Result Card -->
+    <div class="result-card">
+        {% if 'high' in prediction.lower() %}
+            <div class="risk-icon">🔴</div>
+            <h2>High Risk Assessment</h2>
+            <div class="prediction-result prediction-high-risk">
+                ⚠️ HIGH RISK DETECTED
+            </div>
+        {% elif 'medium' in prediction.lower() %}
+            <div class="risk-icon">🟡</div>
+            <h2>Medium Risk Assessment</h2>
+            <div class="prediction-result prediction-medium-risk">
+                ⚡ MEDIUM RISK
+            </div>
+        {% else %}
+            <div class="risk-icon">🟢</div>
+            <h2>Low Risk Assessment</h2>
+            <div class="prediction-result prediction-low-risk">
+                ✅ LOW RISK
+            </div>
+        {% endif %}
+        
+        <div class="confidence-score">
+            🎯 Model Confidence: <span class="confidence-value">{{ confidence }}%</span>
+        </div>
+        
+        <p class="result-description">
+            {% if 'high' in prediction.lower() %}
+                🚨 Based on the analysis, this student may need immediate attention and additional academic support to improve their chances of success.
+            {% elif 'medium' in prediction.lower() %}
+                ⚖️ This student shows some risk factors that warrant monitoring and targeted interventions to prevent academic difficulties.
+            {% else %}
+                🌟 Great news! This student appears to be on a positive academic trajectory with strong indicators for success.
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- Detailed Probabilities -->
+    {% if probabilities %}
+    <div class="card">
+        <div class="card-header">
+            <h3>📊 Risk Assessment Breakdown</h3>
+            <p>AI model probability distribution across different risk levels</p>
+        </div>
+        
+        <div class="probability-bars">
+            {% for risk_level, probability in probabilities.items() %}
+            <div class="probability-item">
+                <div class="probability-label">
+                    <span>
+                        {% if 'high' in risk_level.lower() %}🔴{% elif 'medium' in risk_level.lower() %}🟡{% else %}🟢{% endif %}
+                        {{ risk_level.replace('_', ' ').title() }}
+                    </span>
+                    <span class="probability-percent">{{ probability }}%</span>
+                </div>
+                <div class="probability-bar">
+                    <div class="probability-fill {{ risk_level.lower().replace('_', '-').replace(' ', '-') }}" 
+                         style="width: {{ probability }}%"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Key Factors Analysis -->
+    <div class="card">
+        <div class="card-header">
+            <h3>🔍 Key Factors Analysis</h3>
+            <p>Important factors that influenced this prediction</p>
+        </div>
+        
+        <div class="factors-grid">
+            {% if input_data.get('failures') and input_data.failures != '0' %}
+            <div class="factor-item risk-factor">
+                <div class="factor-icon">⚠️</div>
+                <div class="factor-content">
+                    <h4>Past Failures</h4>
+                    <p>{{ input_data.failures }} previous class failure(s) detected</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if input_data.get('absences') and input_data.absences|int > 10 %}
+            <div class="factor-item risk-factor">
+                <div class="factor-icon">📊</div>
+                <div class="factor-content">
+                    <h4>High Absences</h4>
+                    <p>{{ input_data.absences }} absences recorded</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if input_data.get('studytime') == '1' %}
+            <div class="factor-item risk-factor">
+                <div class="factor-icon">📚</div>
+                <div class="factor-content">
+                    <h4>Low Study Time</h4>
+                    <p>Less than 2 hours of weekly study</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if input_data.get('higher') == 'yes' %}
+            <div class="factor-item positive-factor">
+                <div class="factor-icon">🎓</div>
+                <div class="factor-content">
+                    <h4>Higher Ed. Goals</h4>
+                    <p>Aspires to higher education</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if input_data.get('famsup') == 'yes' %}
+            <div class="factor-item positive-factor">
+                <div class="factor-icon">👨‍👩‍👧‍👦</div>
+                <div class="factor-content">
+                    <h4>Family Support</h4>
+                    <p>Has family educational support</p>
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if input_data.get('internet') == 'yes' %}
+            <div class="factor-item positive-factor">
+                <div class="factor-icon">🌐</div>
+                <div class="factor-content">
+                    <h4>Internet Access</h4>
+                    <p>Has internet access at home</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Student Profile Summary -->
+    <div class="card">
+        <div class="card-header">
+            <h3>👤 Student Profile Summary</h3>
+            <p>Complete information used for the prediction</p>
+        </div>
+        
+        <div class="profile-sections">
+            <!-- Personal Info -->
+            <div class="profile-section">
+                <h4>👤 Personal Information</h4>
+                <div class="info-grid">
+                    {% if input_data.get('school') %}
+                    <div class="info-item">
+                        <span class="info-label">🏫 School:</span>
+                        <span class="info-value">
+                            {% if input_data.school == 'GP' %}Gabriel Pereira{% elif input_data.school == 'MS' %}Mousinho da Silveira{% else %}{{ input_data.school }}{% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('age') %}
+                    <div class="info-item">
+                        <span class="info-label">🎂 Age:</span>
+                        <span class="info-value">{{ input_data.age }} years</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('sex') %}
+                    <div class="info-item">
+                        <span class="info-label">⚧ Gender:</span>
+                        <span class="info-value">{% if input_data.sex == 'F' %}Female{% else %}Male{% endif %}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('address') %}
+                    <div class="info-item">
+                        <span class="info-label">📍 Address:</span>
+                        <span class="info-value">{% if input_data.address == 'U' %}🏙️ Urban{% else %}🌾 Rural{% endif %}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Academic Performance -->
+            <div class="profile-section">
+                <h4>📚 Academic Performance</h4>
+                <div class="info-grid">
+                    {% if input_data.get('studytime') %}
+                    <div class="info-item">
+                        <span class="info-label">⏱️ Study Time:</span>
+                        <span class="info-value">
+                            {% set study_times = {'1': '< 2 hours', '2': '2-5 hours', '3': '5-10 hours', '4': '> 10 hours'} %}
+                            {{ study_times.get(input_data.studytime, input_data.studytime) }}
+                        </span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('failures') %}
+                    <div class="info-item">
+                        <span class="info-label">❌ Past Failures:</span>
+                        <span class="info-value">
+                            {% if input_data.failures == '0' %}None✅{% elif input_data.failures == '3' %}3 or more🔴{% else %}{{ input_data.failures }}{% endif %}
+                        </span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('absences') %}
+                    <div class="info-item">
+                        <span class="info-label">📊 Absences:</span>
+                        <span class="info-value">{{ input_data.absences }} days</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('G1') %}
+                    <div class="info-item">
+                        <span class="info-label">📝 G1 Grade:</span>
+                        <span class="info-value">{{ input_data.G1 }}/20</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('G2') %}
+                    <div class="info-item">
+                        <span class="info-label">📝 G2 Grade:</span>
+                        <span class="info-value">{{ input_data.G2 }}/20</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Support System -->
+            <div class="profile-section">
+                <h4>🤝 Support System</h4>
+                <div class="info-grid">
+                    {% if input_data.get('famsup') %}
+                    <div class="info-item">
+                        <span class="info-label">👨‍👩‍👧‍👦 Family Support:</span>
+                        <span class="info-value">{% if input_data.famsup == 'yes' %}✅ Yes{% else %}❌ No{% endif %}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('schoolsup') %}
+                    <div class="info-item">
+                        <span class="info-label">🏫 School Support:</span>
+                        <span class="info-value">{% if input_data.schoolsup == 'yes' %}✅ Yes{% else %}❌ No{% endif %}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('paid') %}
+                    <div class="info-item">
+                        <span class="info-label">💰 Extra Classes:</span>
+                        <span class="info-value">{% if input_data.paid == 'yes' %}✅ Yes{% else %}❌ No{% endif %}</span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if input_data.get('internet') %}
+                    <div class="info-item">
+                        <span class="info-label">🌐 Internet:</span>
+                        <span class="info-value">{% if input_data.internet == 'yes' %}✅ Available{% else %}❌ Not Available{% endif %}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="card recommendations-card">
+        <div class="card-header">
+            <h3>💡 Personalized Recommendations</h3>
+            <p>Actionable strategies based on this risk assessment</p>
+        </div>
+        
+        {% if 'high' in prediction.lower() %}
+        <div class="alert alert-error">
+            <div class="alert-icon">🚨</div>
+            <div class="alert-content">
+                <strong>Immediate Attention Required</strong>
+                <p>This student needs comprehensive support to prevent academic failure.</p>
+            </div>
+        </div>
+        
+        <div class="recommendations-grid">
+            <div class="recommendation-item urgent">
+                <div class="rec-icon">👩‍🏫</div>
+                <div class="rec-content">
+                    <h4>Intensive Tutoring</h4>
+                    <p>Implement one-on-one or small group tutoring sessions</p>
+                </div>
+            </div>
+            <div class="recommendation-item urgent">
+                <div class="rec-icon">📋</div>
+                <div class="rec-content">
+                    <h4>Learning Plan</h4>
+                    <p>Create a personalized learning plan with clear milestones</p>
+                </div>
+            </div>
+            <div class="recommendation-item urgent">
+                <div class="rec-icon">👥</div>
+                <div class="rec-content">
+                    <h4>Support Team</h4>
+                    <p>Assemble a support team including counselors and mentors</p>
+                </div>
+            </div>
+            <div class="recommendation-item urgent">
+                <div class="rec-icon">📊</div>
+                <div class="rec-content">
+                    <h4>Weekly Monitoring</h4>
+                    <p>Implement weekly progress check-ins and assessments</p>
+                </div>
+            </div>
+        </div>
+        
+        {% elif 'medium' in prediction.lower() %}
+        <div class="alert alert-warning">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <strong>Monitor and Support</strong>
+                <p>This student benefits from targeted interventions and regular monitoring.</p>
+            </div>
+        </div>
+        
+        <div class="recommendations-grid">
+            <div class="recommendation-item moderate">
+                <div class="rec-icon">📅</div>
+                <div class="rec-content">
+                    <h4>Regular Check-ins</h4>
+                    <p>Schedule bi-weekly academic progress reviews</p>
+                </div>
+            </div>
+            <div class="recommendation-item moderate">
+                <div class="rec-icon">🎯</div>
+                <div class="rec-content">
+                    <h4>Study Skills</h4>
+                    <p>Provide study skills workshops and time management training</p>
+                </div>
+            </div>
+            <div class="recommendation-item moderate">
+                <div class="rec-icon">👥</div>
+                <div class="rec-content">
+                    <h4>Study Groups</h4>
+                    <p>Encourage participation in peer study groups</p>
+                </div>
+            </div>
+            <div class="recommendation-item moderate">
+                <div class="rec-icon">📈</div>
+                <div class="rec-content">
+                    <h4>Progress Tracking</h4>
+                    <p>Monitor for any changes in academic performance patterns</p>
+                </div>
+            </div>
+        </div>
+        
+        {% else %}
+        <div class="alert alert-success">
+            <div class="alert-icon">✅</div>
+            <div class="alert-content">
+                <strong>On Track for Success</strong>
+                <p>This student shows positive indicators and should be supported to maintain trajectory.</p>
+            </div>
+        </div>
+        
+        <div class="recommendations-grid">
+            <div class="recommendation-item positive">
+                <div class="rec-icon">🌟</div>
+                <div class="rec-content">
+                    <h4>Enrichment</h4>
+                    <p>Consider advanced coursework or enrichment opportunities</p>
+                </div>
+            </div>
+            <div class="recommendation-item positive">
+                <div class="rec-icon">🎯</div>
+                <div class="rec-content">
+                    <h4>Goal Setting</h4>
+                    <p>Help set and pursue higher academic and career goals</p>
+                </div>
+            </div>
+            <div class="recommendation-item positive">
+                <div class="rec-icon">👨‍🎓</div>
+                <div class="rec-content">
+                    <h4>Leadership</h4>
+                    <p>Encourage peer tutoring and leadership roles</p>
+                </div>
+            </div>
+            <div class="recommendation-item positive">
+                <div class="rec-icon">📊</div>
+                <div class="rec-content">
+                    <h4>Maintain Support</h4>
+                    <p>Continue current support levels with regular monitoring</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            🔄 New Prediction
+        </a>
+        <a href="{{ url_for('model_info') }}" class="btn btn-secondary">
+            📊 Model Details
+        </a>
+        <button onclick="window.print()" class="btn btn-accent">
+            🖨️ Print Report
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Add some interactive enhancements
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate probability bars
+    setTimeout(() => {
+        const bars = document.querySelectorAll('.probability-fill');
+        bars.forEach(bar => {
+            const width = bar.style.width;
+            bar.style.width = '0%';
+            setTimeout(() => {
+                bar.style.width = width;
+            }, 200);
+        });
+    }, 500);
+    
+    // Add hover effects to recommendation items
+    const recItems = document.querySelectorAll('.recommendation-item');
+    recItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+});
+</script>
+{% endblock %}
