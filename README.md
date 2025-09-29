@@ -113,10 +113,10 @@ print(result)
 ## 🧠 Model Information
 
 - **Algorithm**: Random Forest Classifier
-- **Accuracy**: 87.7%
-- **Precision**: 83%
-- **Recall**: 82%
-- **F1-Score**: 82%
+- **Accuracy**: 94.7%
+- **Precision**: 91.2%
+- **Recall**: 99%
+- **F1-Score**: 94.9%
 
 ### Key Features Used
 
@@ -177,10 +177,10 @@ The system uses a Random Forest classifier with:
 
 | Metric | Score |
 |--------|-------|
-| Accuracy | 87.7% |
-| Precision (avg) | 83% |
-| Recall (avg) | 82% |
-| F1-Score (avg) | 82% |
+| Accuracy | 94.7% |
+| Precision (avg) | 91.2% |
+| Recall (avg) | 99% |
+| F1-Score (avg) | 94.9% |
 
 ## 🔧 Configuration
 
